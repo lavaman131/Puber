@@ -3,10 +3,11 @@ import requests
 import pandas as pd
 import time
 from datetime import datetime
+from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
-API_KEY_GOOGLE_CLOUD = 'XXX' # DO NOT FORGET TO DISABLE API KEYS AFTER THE HACKATHON
-API_KEY_WEATHER_API = 'XXX' # DO NOT FORGET TO DISABLE API KEYS AFTER THE HACKATHON
+API_KEY_GOOGLE_CLOUD = 'AIzaSyC8UFAfQUcHMPEa5sBc0RiJSsZ9qs0eNMQ'
+API_KEY_WEATHER_API = 'b18956006b834338b91142236221510'
 
 @app.route('/api/get_prediction', methods=['GET', 'POST'])
 def get_prediction():
@@ -33,11 +34,15 @@ def get_prediction_data(content):
         for entry in day['hour']:
             if entry['time_epoch']>=current_time: 
                 hour = datetime.fromtimestamp(entry['time_epoch']).hour
-                pred_data[entry['time_epoch']] = [distance, hour, entry['temp_f'], entry['cloud'], max(entry['chance_of_rain'],entry['chance_of_snow']), entry['humidity'], entry['wind_mph']]
+                pred_data[entry['time_epoch']] = [entry['temp_f'], entry['cloud'], max(entry['chance_of_rain'],entry['chance_of_snow']), entry['humidity'], entry['wind_mph'], distance, hour]
     
     pred_data = dict(list(pred_data.items())[0: 6]) 
-    #pred_data['status'] = 200
-    #print(pred_data['status'])
+    
+    Y_pred = [pred_data[time_stamp] for time_stamp in pred_data]
+    print(Y_pred)
+    
+    #model.predict(Y_pred)
+    #model should predict here, and then we will send predictions with timestamps to clients
     
     return pred_data, 200
 
@@ -52,6 +57,9 @@ def get_distance(loc_data):
     return int(content['rows'][0]['elements'][0]['distance']['value'])/1000/1.609
 
 if __name__ == '__main__':
+    print('Loading regression model...')
+    model = load_model('MLP_model.h5')
+    print('Model loaded successfully')
     print('Starting server...')
     app.run()
-    print('Stopping server')
+    print('Stopping server...')
