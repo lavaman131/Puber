@@ -51,7 +51,7 @@ function get_prediction() {
 }
 
 function create_chart(pred_data_values){
-  const labels = ["1 Hour", "2 Hours", "3 Hours", "4 Hours", "5 Hours"];
+  const labels = ["1 Hour", "2 Hours", "3 Hours", "4 Hours", "5 Hours", "6 Hour", "7 Hours", "8 Hours", "9 Hours", "10 Hours"];
   console.log(pred_data_values.flat());
   const data = {
     labels: labels,
