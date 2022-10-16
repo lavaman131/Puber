@@ -25,11 +25,11 @@ Finally, due to some issues with git (and our own mistakes), we overwrote large 
 Other include: Components not connecting with each other, determining best features to incorporate in model, fine-tuning, getting custom API to return responses
 
 ## Accomplishments that we're proud of 🏆
-- Continous Integration with ML pipeline 
+- Continuous Integration with ML pipeline 
 - **Custom PUber API** so anyone can use this trained model for their own projects
 - **Full-Stack Application** with Flask, TensorFlow, Scikit-Learn, JavaScript, HTML, and CSS
 - Comprehensive exploratory data analysis and combination of **novel machine learning and deep learning techniques** (successfully developed two different models based on a variety of features discussed above)
-  - **92% accuracy** for random forest classfier in balanced setting
+  - **92% accuracy** for random forest classifier in balanced setting
   - MLP model trained on over 50k points, is **less than a dollar within range** of predicting price of $6 to $44 Uber rides
 
 ## What we learned 📚
