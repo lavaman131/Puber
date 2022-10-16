@@ -5,8 +5,11 @@ import time
 from datetime import datetime
 import joblib
 import numpy as np
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 API_KEY_GOOGLE_CLOUD = 'AIzaSyC8UFAfQUcHMPEa5sBc0RiJSsZ9qs0eNMQ'
 API_KEY_WEATHER_API = 'b18956006b834338b91142236221510'
     
