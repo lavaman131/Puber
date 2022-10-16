@@ -6,18 +6,23 @@ const calculateButton = document.querySelector("#calculate");
 const originInput = document.querySelector("#origin");
 const destinationInput = document.querySelector("#destination");
 const predictionChart = document.querySelector("#prediction");
+$(predictionChart).slideUp();
 
 calculateButton.addEventListener("click", () => {
+  if (originInput.value == "" || destinationInput.value == "")
+  {
+    alert("Please enter a valid location.")
+  }
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   if (show) {
-     $(predictionChart).slideToggle();
+     $(predictionChart).slideUp();
      get_prediction();
-     $(predictionChart).slideToggle();
+     $(predictionChart).slideDown();
    } else {
       get_prediction();
      show = true;
-    $(predictionChart).slideToggle();
+    $(predictionChart).slideUp();
   }
 });
 
@@ -43,20 +48,24 @@ function get_prediction() {
     .then(response => response.text())
     .then(result => {
             const preds = JSON.parse(result)
-            const keys = Object.keys(preds["prediction data"])
             const values = Object.values(preds["prediction data"])
-            create_chart(values)})
+            const values_pct = values.map(function(element)
+            {
+              return(element / values[0]) * 100
+            })
+            console.log(values_pct)
+            create_chart(values_pct)})
     .catch(error => console.log('error', error));
 }
 
 function create_chart(pred_data_values){
-  const labels = ["1 Hour", "2 Hours", "3 Hours", "4 Hours", "5 Hours", "6 Hour", "7 Hours", "8 Hours", "9 Hours", "10 Hours"];
+  const labels = ["1 ", "2 ", "3 ", "4 ", "5 ", "6 ", "7 ", "8 ", "9 ", "10"];
   console.log(pred_data_values.flat());
   const data = {
     labels: labels,
     datasets: [
       {
-        label: "Predicted price multiplier",
+        label: "Predicted Price Fluctuation",
         backgroundColor: "hsl(221, 83%, 53%)",
         borderColor: "hsl(221, 83%, 53%)",
         data: pred_data_values.flat(),
@@ -67,12 +76,15 @@ function create_chart(pred_data_values){
   const configLineChart = {
     type: "line",
     data,
-    options: {},
+    options: {
+      scales: {x: { title: { display: true, text: 'Hours' }},
+              y: { title: { display: true, text: 'Percent Fluctuation' }}}
+    }
   };
 
   if (Chart.getChart('chartLine')!=null){
     chartLine = Chart.getChart('chartLine');
-    chartLine.remove();
+    chartLine.destroy();
   };
 
   var chartLine = new Chart(

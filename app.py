@@ -1,9 +1,8 @@
 from flask import Flask, request, jsonify
 import requests
-import pandas as pd
 import time
 from datetime import datetime
-import joblib
+from tensorflow.keras.models import load_model
 import numpy as np
 from flask_cors import CORS
 
@@ -55,11 +54,10 @@ def get_prediction_data(content):
     
     pred_data = dict(list(pred_data.items())[0: 11]) 
 
-    clf = joblib.load('random_forest.pkl')
+    model = load_model('MLP_model.h5')
     mu, sigma = np.load('scales.npy')
 
-    mapping = {0: 1, 1: 1.25, 2: 1.5, 3: 1.75, 4: 2, 5: 2.5}
-    preds_dict = {k: [mapping[clf.predict(z_standardize(np.array(v), mu, sigma).reshape(1, -1))[0]]]
+    preds_dict = {k: model.predict(z_standardize(np.array(v), mu, sigma).reshape(1, -1)).flatten().tolist()
                   for k, v in pred_data.items()}
     
     return preds_dict, 200
