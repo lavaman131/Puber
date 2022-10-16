@@ -3,12 +3,16 @@ import requests
 import pandas as pd
 import time
 from datetime import datetime
-from tensorflow.keras.models import load_model
+import joblib
+import numpy as np
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 API_KEY_GOOGLE_CLOUD = 'AIzaSyC8UFAfQUcHMPEa5sBc0RiJSsZ9qs0eNMQ'
 API_KEY_WEATHER_API = 'b18956006b834338b91142236221510'
-
+    
 @app.route('/api/get_prediction', methods=['GET', 'POST'])
 def get_prediction():
     content = request.json
@@ -18,6 +22,19 @@ def get_prediction():
     response = {'status': status}
     response.update({'prediction data': prediction_data})
     return jsonify(response)
+
+def get_distance(loc_data):
+    origin_loc = loc_data['origin'].replace(' ', '%20').replace(',', '%2C')
+    destination_loc = loc_data['destination'].replace(' ', '%20').replace(',', '%2C')
+    response = requests.get(f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin_loc}&destinations={destination_loc}&key={API_KEY_GOOGLE_CLOUD}')
+    content = response.json();
+    if content['rows'][0]['elements'][0]['status'] != 'OK':
+        return -1;
+
+    return int(content['rows'][0]['elements'][0]['distance']['value'])/1000/1.609
+
+def z_standardize(x, mu, sigma):
+    return (x - mu) / sigma
 
 def get_prediction_data(content):
     
@@ -34,32 +51,23 @@ def get_prediction_data(content):
         for entry in day['hour']:
             if entry['time_epoch']>=current_time: 
                 hour = datetime.fromtimestamp(entry['time_epoch']).hour
-                pred_data[entry['time_epoch']] = [entry['temp_f'], entry['cloud'], max(entry['chance_of_rain'],entry['chance_of_snow']), entry['humidity'], entry['wind_mph'], distance, hour]
+                pred_data[entry['time_epoch']] = [entry['temp_f'], entry['cloud'] / 100, entry['chance_of_rain'] / 100, entry['humidity'] / 100, entry['wind_mph'], distance, hour]
     
     pred_data = dict(list(pred_data.items())[0: 6]) 
-    
-    Y_pred = [pred_data[time_stamp] for time_stamp in pred_data]
-    print(Y_pred)
-    
-    #model.predict(Y_pred)
-    #model should predict here, and then we will send predictions with timestamps to clients
-    
-    return pred_data, 200
 
-def get_distance(loc_data):
-    origin_loc = loc_data['origin'].replace(' ', '%20').replace(',', '%2C')
-    destination_loc = loc_data['destination'].replace(' ', '%20').replace(',', '%2C')
-    response = requests.get(f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin_loc}&destinations={destination_loc}&key={API_KEY_GOOGLE_CLOUD}')
-    content = response.json();
-    if content['rows'][0]['elements'][0]['status'] != 'OK':
-        return -1;
+    clf = joblib.load('random_forest.pkl')
+    mu, sigma = np.load('scales.npy')
 
-    return int(content['rows'][0]['elements'][0]['distance']['value'])/1000/1.609
+    mapping = {0: 1, 1: 1.25, 2: 1.5, 3: 1.75, 4: 2, 5: 2.5}
+    preds_dict = {k: [mapping[clf.predict(z_standardize(np.array(v), mu, sigma).reshape(1, -1))[0]]]
+                  for k, v in pred_data.items()}
+    
+    return preds_dict, 200
+
 
 if __name__ == '__main__':
     print('Loading regression model...')
-    model = load_model('MLP_model.h5')
     print('Model loaded successfully')
     print('Starting server...')
-    app.run()
+    app.run(debug=True)
     print('Stopping server...')
