@@ -53,7 +53,7 @@ def get_prediction_data(content):
                 hour = datetime.fromtimestamp(entry['time_epoch']).hour
                 pred_data[entry['time_epoch']] = [entry['temp_f'], entry['cloud'] / 100, entry['chance_of_rain'] / 100, entry['humidity'] / 100, entry['wind_mph'], distance, hour]
     
-    pred_data = dict(list(pred_data.items())[0: 6]) 
+    pred_data = dict(list(pred_data.items())[0: 11]) 
 
     clf = joblib.load('random_forest.pkl')
     mu, sigma = np.load('scales.npy')
