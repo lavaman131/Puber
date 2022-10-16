@@ -6,6 +6,7 @@ const calculateButton = document.querySelector("#calculate");
 const originInput = document.querySelector("#origin");
 const destinationInput = document.querySelector("#destination");
 const predictionChart = document.querySelector("#prediction");
+$(predictionChart).slideUp();
 
 calculateButton.addEventListener("click", () => {
   var myHeaders = new Headers();
