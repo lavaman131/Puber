@@ -3,13 +3,13 @@ import requests
 import pandas as pd
 import time
 from datetime import datetime
-from tensorflow.keras.models import load_model
+import joblib
 import numpy as np
 
 app = Flask(__name__)
 API_KEY_GOOGLE_CLOUD = 'AIzaSyC8UFAfQUcHMPEa5sBc0RiJSsZ9qs0eNMQ'
 API_KEY_WEATHER_API = 'b18956006b834338b91142236221510'
-
+    
 @app.route('/api/get_prediction', methods=['GET', 'POST'])
 def get_prediction():
     content = request.json
@@ -48,13 +48,15 @@ def get_prediction_data(content):
         for entry in day['hour']:
             if entry['time_epoch']>=current_time: 
                 hour = datetime.fromtimestamp(entry['time_epoch']).hour
-                pred_data[entry['time_epoch']] = [entry['temp_f'], entry['cloud'], max(entry['chance_of_rain'],entry['chance_of_snow']), entry['humidity'], entry['wind_mph'], distance, hour]
+                pred_data[entry['time_epoch']] = [entry['temp_f'], entry['cloud'] / 100, entry['chance_of_rain'] / 100, entry['humidity'] / 100, entry['wind_mph'], distance, hour]
     
     pred_data = dict(list(pred_data.items())[0: 6]) 
 
-    model = load_model('MLP_model.h5')
+    clf = joblib.load('random_forest.pkl')
     mu, sigma = np.load('scales.npy')
-    preds_dict = {k: model.predict(z_standardize(np.array(v), mu, sigma)).flatten()[0]
+
+    mapping = {0: 1, 1: 1.25, 2: 1.5, 3: 1.75, 4: 2, 5: 2.5}
+    preds_dict = {k: [mapping[clf.predict(z_standardize(np.array(v), mu, sigma).reshape(1, -1))[0]]]
                   for k, v in pred_data.items()}
     
     return preds_dict, 200
@@ -64,5 +66,5 @@ if __name__ == '__main__':
     print('Loading regression model...')
     print('Model loaded successfully')
     print('Starting server...')
-    app.run()
+    app.run(debug=True)
     print('Stopping server...')
