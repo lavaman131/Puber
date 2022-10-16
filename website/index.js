@@ -12,6 +12,7 @@ calculateButton.addEventListener("click", () => {
   if (originInput.value == "" || destinationInput.value == "")
   {
     alert("Please enter a valid location.")
+    return
   }
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
