@@ -40,6 +40,8 @@ Other include: Components not connecting with each other, determining best featu
 
 
 ## What's next for PUber 🔮 
+- Uber Button for ease of access when finalizing rides
+- Use traffic data to more accurately analyze price fluctations
 - Updating UI to be more interactive (and look prettier) with more React animations
 - Hosting on website (add AWS Lambda for API Queries)
 - Adding other features besides weather to further improve model accuracy
