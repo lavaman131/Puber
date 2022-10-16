@@ -2,8 +2,7 @@
 <link rel="stylesheet" type="text/css" href="output.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
 </head>
-<style id="_style">
-  /* __play_start_base__ */
+<style id="_style">/* __play_start_base__ */
 
 /* ! tailwindcss v3.1.8 | MIT License | https://tailwindcss.com */
 
@@ -614,12 +613,6 @@ video {
   align-items: flex-start;
 }
 
-.cover {
-  visibility:
-  transform: translateY(-100%);
-  transition: transform 0.5s, visibility 0.3s;
-}
-
 .items-center {
   align-items: center;
 }
@@ -661,19 +654,19 @@ video {
   background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
 
-.from-white {
-  --tw-gradient-from: #fff;
-  --tw-gradient-to: rgb(255 255 255 / 0);
+.from-indigo-400 {
+  --tw-gradient-from: #818cf8;
+  --tw-gradient-to: rgb(129 140 248 / 0);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
-.via-white {
-  --tw-gradient-to: rgb(255 255 255 / 0);
-  --tw-gradient-stops: var(--tw-gradient-from), #fff, var(--tw-gradient-to);
+.via-indigo-200 {
+  --tw-gradient-to: rgb(199 210 254 / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), #c7d2fe, var(--tw-gradient-to);
 }
 
-.to-gray-100 {
-  --tw-gradient-to: #f3f4f6;
+.to-purple-100 {
+  --tw-gradient-to: #f3e8ff;
 }
 
 .bg-cover {
@@ -682,10 +675,6 @@ video {
 
 .p-10 {
   padding: 2.5rem;
-}
-
-.top {
-  display: none;
 }
 
 .px-10 {
@@ -907,7 +896,7 @@ video {
 <section class="w-full bg-white">
   <div class="mx-auto max-w-15xl">
     <div class="flex flex-col lg:flex-row">
-      <div class="relative w-full bg-gradient-to-r from-white via-white to-gray-100 bg-cover lg:w-6/12 xl:w-7/12">
+      <div class="relative w-full bg-gradient-to-r from-indigo-400 via-indigo-200 to-purple-100 bg-cover lg:w-6/12 xl:w-7/12">
         <div class="relative my-20 flex h-full w-full flex-col items-center justify-center px-10 lg:my-0 lg:px-16">
           <div class="flex flex-col items-start space-y-8 tracking-tight lg:max-w-3xl">
             <div class="relative">
@@ -922,7 +911,7 @@ video {
       <div class="w-full bg-white lg:w-5/12 xl:w-9/12">
         <div class="flex h-full w-full flex-col items-start justify-start p-10 lg:p-16 xl:p-24">
           <h4 class="w-full text-3xl font-bold">PUber</h4>
-          <p class="text-lg text-gray-500">Predict Uber prices up to the next 5 hours</p>
+          <p class="text-lg text-gray-500">Predict Uber prices up to the next 10 hours</p>
           <div class="relative mt-10 w-full space-y-8">
             <div class="relative">
               <label class="font-medium text-gray-900">Origin</label>
@@ -936,7 +925,6 @@ video {
               <button id="calculate" class="calculate ease inline-block w-full rounded-lg bg-blue-600 px-5 py-4 text-center text-lg font-medium text-white transition duration-200 hover:bg-blue-700" data-primary="blue-600" data-rounded="rounded-lg">Calculate</a>
             </div>
             <div id="prediction" class="top hide shadow-lg rounded-lg overflow-hidden">
-              <div class="py-1 px-1 bg-gray-50">Our prediction</div>
               <canvas class="p-1" id="chartLine"></canvas>
             </div>
           </div>
