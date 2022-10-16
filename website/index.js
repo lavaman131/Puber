@@ -18,7 +18,7 @@ calculateButton.addEventListener("click", () => {
    } else {
       get_prediction();
      show = true;
-    $(predictionChart).slideUp();
+    $(predictionChart).slideDown();
   }
 });
 
