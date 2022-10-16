@@ -6,19 +6,18 @@ const calculateButton = document.querySelector("#calculate");
 const originInput = document.querySelector("#origin");
 const destinationInput = document.querySelector("#destination");
 const predictionChart = document.querySelector("#prediction");
-$(predictionChart).slideUp();
 
 calculateButton.addEventListener("click", () => {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   if (show) {
-     $(predictionChart).slideUp();
+     $(predictionChart).slideToggle();
      get_prediction();
-     $(predictionChart).slideDown();
+     $(predictionChart).slideToggle();
    } else {
       get_prediction();
      show = true;
-    $(predictionChart).slideDown();
+    $(predictionChart).slideToggle();
   }
 });
 
