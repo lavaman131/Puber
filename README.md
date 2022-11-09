@@ -9,7 +9,8 @@ PUber, or Predictive-Uber for long, accurately predicts Uber prices for the next
 
 ## How we built it 🛠
 - Backend: 
-  - Developed Custom REST API with Python Flask library, developed deep learning model with TensorFlow based off of Multi-Layer Perceptron (MLP) neural network trained on over 50k data points, used Google Cloud content to access Google Maps API (a key component within our application) and Weather API to determine 
+  - Developed Custom REST API with Python Flask library, developed deep learning model with TensorFlow based off of Multi-Layer Perceptron (MLP) neural network trained on over 50k data points, used Google Cloud content to access Google Maps API (a key component within our application) and Weather API to determine distance and weather conditions
+  
 - Frontend: 
   - Designed minimal and easy to use interface
   - Created frontend with vanilla JavaScript, HTML, and Tailwind CSS
